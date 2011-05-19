@@ -6,8 +6,10 @@
     <em:name>Developer Profile</em:name>
     <em:version>0.1</em:version>
     <em:homepageURL>http://www.xertoz.se/</em:homepageURL>
+    <em:iconURL>chrome://DeveloperProfile/skin/icon.png</em:iconURL>
     <em:creator>Mattias Lindholm</em:creator>
     <em:description>Easily set up an extension development environment.</em:description>
+    <em:contributor>Jonas Rask</em:contributor>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
