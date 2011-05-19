@@ -1,9 +1,30 @@
+// Only export the DeveloperProfile object
 var EXPORTED_SYMBOLS = ['DeveloperProfile'];
+
+// We do want to use the AddonManager
+Components.utils.import('resource://gre/modules/AddonManager.jsm');
 
 /**
 * The main DeveloperProfile object for the addon's shared code within the applications
 */
 var DeveloperProfile = {
+    /**
+    * Load the module
+    */
+    load: function() {
+        // Hook addon events to our listener
+        AddonManager.addAddonListener(DeveloperProfile.watcher);
+
+        // Observe the application quitting - so we can hook the uninstallation!
+        Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService).addObserver(function() {
+            if (DeveloperProfile.watcher.uninstall)
+                DeveloperProfile.profiler.undo();
+        },'quit-application',false);
+
+        // Set up the development environment
+        DeveloperProfile.profiler.make();
+    },
+    
     /**
     * Handle preferences through this API at all times - it'll guarantee a clean uninstall.
     */
@@ -30,8 +51,17 @@ var DeveloperProfile = {
             
             // Depending on the expected type of this preference, get the old value.
             switch (typeof(newValue)) {
-                case 'boolean': oldValue = branch.getBoolPref(preference); break;
-                default: throw 'Unsupported type ('+typeof(newValue)+') of the preference value';
+                case 'boolean':
+                    try {
+                        oldValue = branch.getBoolPref(preference);
+                    }
+                    catch (e) {
+                        oldValue = false;
+                    }
+                break;
+                
+                default:
+                    throw 'Unsupported type ('+typeof(newValue)+') of the preference value';
             }
             
             // If we do not have the same value on the assignment - remember the old one and set the new!
@@ -96,5 +126,34 @@ var DeveloperProfile = {
                 }
             });
         }
+    },
+    
+    /**
+    * Watch the status of this addon
+    */
+    watcher: {
+        /**
+        * Is the addon still marked for uninstallation?
+        */
+        onOperationCancelled: function(addon) {
+            if (addon.id == 'developerprofile@xertoz.se')
+                DeveloperProfile.watcher.uninstall = (addon.pendingOperations & AddonManager.PENDING_UNINSTALL) != 0;
+        },
+        
+        /**
+        * Flag the addon marked for uninstallation
+        */
+        onUninstalling: function(addon) {
+            if (addon.id == 'developerprofile@xertoz.se')
+                DeveloperProfile.watcher.uninstall = true;
+        },
+        
+        /**
+        * Addon's uninstallation flag
+        */
+        uninstall: false
     }
 };
+
+// Load the module
+DeveloperProfile.load();
