@@ -1,0 +1,11 @@
+# Basics
+content     DeveloperProfile                            chrome/content/
+
+# Firefox
+overlay     chrome://browser/content/browser.xul        chrome://CommentBlocker/content/firefox/overlay.xul         application={ec8030f7-c20a-464f-9b0e-13a3a9e97384}
+
+# Fennec
+overlay     chrome://browser/content/browser.xul        chrome://CommentBlocker/content/fennec/overlay.xul          application={a23983c0-fd0e-11dc-95ff-0800200c9a66}
+
+# Locales
+locale      DeveloperProfile                            en-US                                                       chrome/locale/en-US/
