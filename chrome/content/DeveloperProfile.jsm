@@ -17,7 +17,7 @@ var DeveloperProfile = {
 
         // Observe the application quitting - so we can hook the uninstallation!
         Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService).addObserver(function() {
-            if (DeveloperProfile.watcher.uninstall)
+            if (DeveloperProfile.watcher.uninstall || DeveloperProfile.watcher.disable)
                 DeveloperProfile.profiler.undo();
         },'quit-application',false);
 
@@ -133,15 +133,30 @@ var DeveloperProfile = {
     */
     watcher: {
         /**
-        * Is the addon still marked for uninstallation?
+        * Addon's disabling flag
         */
-        onOperationCancelled: function(addon) {
+        disable: false,
+        
+        /**
+        * Flag the addon as marked for disabling
+        */
+        onDisabling: function(addon) {
             if (addon.id == 'developerprofile@xertoz.se')
-                DeveloperProfile.watcher.uninstall = (addon.pendingOperations & AddonManager.PENDING_UNINSTALL) != 0;
+                DeveloperProfile.watcher.disable = true;
         },
         
         /**
-        * Flag the addon marked for uninstallation
+        * Is the addon still marked for anything?
+        */
+        onOperationCancelled: function(addon) {
+            if (addon.id == 'developerprofile@xertoz.se') {
+                DeveloperProfile.watcher.disable = (addon.pendingOperations & AddonManager.PENDING_DISABLE) != 0;
+                DeveloperProfile.watcher.uninstall = (addon.pendingOperations & AddonManager.PENDING_UNINSTALL) != 0;
+            }
+        },
+        
+        /**
+        * Flag the addon as marked for uninstallation
         */
         onUninstalling: function(addon) {
             if (addon.id == 'developerprofile@xertoz.se')
