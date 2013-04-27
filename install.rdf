@@ -3,18 +3,20 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>developerprofile@xertoz.se</em:id>
     <em:type>2</em:type>
+		<em:bootstrap>true</em:bootstrap>
+		<em:unpack>false</em:unpack>
     <em:name>Developer Profile</em:name>
-    <em:version>0.1</em:version>
+    <em:version>1.0</em:version>
     <em:homepageURL>http://www.xertoz.se/</em:homepageURL>
-    <em:iconURL>chrome://DeveloperProfile/skin/icon.png</em:iconURL>
     <em:creator>Mattias Lindholm</em:creator>
     <em:description>Easily set up an extension development environment.</em:description>
     <em:contributor>Jonas Rask</em:contributor>
+    <em:contributor>V@no</em:contributor>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox -->
         <em:minVersion>4.0</em:minVersion>
-        <em:maxVersion>6.0a1</em:maxVersion>
+        <em:maxVersion>23.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
     <em:targetApplication>
